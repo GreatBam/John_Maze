@@ -1,6 +1,4 @@
-import java.util.Random;
 import java.util.Scanner;
-import java.lang.Math;
 
 public class Main {
     public static void main(String[] args) {
@@ -69,49 +67,4 @@ public class Main {
             return false;
     }
 
-    public static void path(int l, int c, char tab[][]) {
-        int low = 0;
-        int randomPath = 0;
-        int selector = 0;
-        int liner = 0;
-        int randomStart = (int) (Math.random() * ((c - low)) + low);
-
-        for(int i = 1; i < (l-1); i++) {
-            if(randomStart <= 0)
-                randomStart += 1;
-            if(randomStart >= (c-2))
-                randomStart -= 1;
-            tab[i][randomStart] = 'X';
-            randomPath = randomStart;
-
-            selector = (int)(Math.random() * (30-1+1)+ 1);
-            if(selector <= 30 && selector > 20)
-                randomPath += 1;
-            if(selector <= 20 && selector > 10)
-                randomPath += 0;
-            if(selector <= 10 && selector > 0)
-                randomPath -= 1;
-
-            if(randomPath <= 0)
-                randomPath += 1;
-            if(randomPath >= (c-2))
-                randomPath -= 1;
-            tab[i][randomPath] = 'X';
-
-            liner = (int)(Math.random()* (100-1+1)+1);
-            if(liner < 50)
-                if(selector <= 30 && selector > 20)
-                    randomPath += 1;
-            if(selector <= 20 && selector > 10)
-                randomPath += 0;
-            if(selector <= 10 && selector > 0)
-                randomPath -= 1;
-            if(randomPath <= 0)
-                randomPath += 1;
-            if(randomPath >= (c-2))
-                randomPath -= 1;
-            tab[i][randomPath] = 'X';
-            randomStart = randomPath;
-        }
-    }
 }
