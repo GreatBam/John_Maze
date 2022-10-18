@@ -15,66 +15,22 @@ public class Main {
         maze = new char[l][c];
 
         Initialize(l, c, maze);
-        Show(l, c, maze);
     }
 
     public static void Initialize(int l,int c, char t[][]) {
         for(int i = 0; i < l; i++) {
-            for(int j = 0; j < c; j++)
-                if(i==0 && j==0)
-                    t[i][j] = '┌';
-                else if(i==0 && j==(c-1))
-                    t[i][j] = '┐';
-                else if(i > 0 && j==0 && i < (l-1) || i > 0 && j==(c-1) && i < (l-1))
-                    t[i][j] = '│';
-                else if(j > 0 && i==0 && j < (c-1) || j > 0 && i==(l-1) && j < (c-1))
-                    t[i][j] = '─';
-                else if(i==(l-1) && j==0)
-                    t[i][j] = '└';
-                else if(i==(l-1) && j==(c-1))
-                    t[i][j] = '┘';
-                else
-                    t[i][j] = '#';
+            for(int j = 0; j < c; j++) {
+                System.out.print(((t[i][j] & 1) == 0) ? "+---" : "    ");
+            }
+            System.out.println("+");
+            for(int j = 0; j < c; j++) {
+                System.out.print(((t[i][j] & 1) == 0) ? "|   " : "    ");
+            }
+            System.out.println("|");
         }
-    }
-
-    public static void Show(int l, int c, char t[][]) {
-        for(int i = 0; i < l; i++) {
-            for (int j = 0; j < c; j++)
-                System.out.print(t[i][j] + " ");
-            System.out.println();
-        }
-    }
-
-    public static boolean Test(int i, int j, char t[][]) {
-        int s = 0;
-        if(t[i][j]=='#') {
-            if(t[i][j-1]==' ')
-                s++;
-            if(t[i][j+1]==' ')
-                s++;
-            if(t[i+1][j]==' ')
-                s++;
-            if(t[i-1][j]==' ')
-                s++;
-            if(s>1)
-                return false;
-            else
-                return true;
-        }
-        else
-            return false;
-    }
-
-    public static void mix(int tab[]) {
-        int i, j, a;
-        for(i = 0; i < 4; i++) 
-            tab[i] = i + 1;
-        for(j = 4; j > 1; j++) {
-            i = (int)(Math.floor(Math.random()* j));
-        a = tab[i];
-        tab[i] = tab[j-1];
-        tab[j-1] = a;
-        }
-    }
+        for (int j = 0; j < c; j++) {
+			System.out.print("+---");
+		}
+		System.out.println("+");
+    }      
 }
