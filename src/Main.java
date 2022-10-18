@@ -15,7 +15,6 @@ public class Main {
         maze = new char[l][c];
 
         Initialize(l, c, maze);
-//        path(l, c, maze);
         Show(l, c, maze);
     }
 
@@ -67,4 +66,15 @@ public class Main {
             return false;
     }
 
+    public static void mix(int tab[]) {
+        int i, j, a;
+        for(i = 0; i < 4; i++) 
+            tab[i] = i + 1;
+        for(j = 4; j > 1; j++) {
+            i = (int)(Math.floor(Math.random()* j));
+        a = tab[i];
+        tab[i] = tab[j-1];
+        tab[j-1] = a;
+        }
+    }
 }
