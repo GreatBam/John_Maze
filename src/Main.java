@@ -2,32 +2,56 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        int l = 0, c = 0;
+        int lines = 0, columns = 0;
         char maze[][];
-        try (Scanner sc = new Scanner(System.in)) {
-            System.out.println("How many lines");
-            l = sc.nextInt();
-            System.out.println("How many columns");
-            c = sc.nextInt();
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("How many lines: ");
+        // checking for integer         
+        while (!sc.hasNextInt())
+        {
+        System.out.println("Please Enter integer!");
+        sc.nextLine();
         }
+        lines = Integer.parseInt(sc.nextLine());
 
-        maze = new char[l][c];
+        System.out.print("How many columns: ");
+        //checking for integer           
+        while (!sc.hasNextInt())
+        {
+        System.out.println("Please Enter integer!");
+        sc.nextLine();
+        }
+        columns = Integer.parseInt(sc.nextLine());
 
-        Initialize(l, c, maze);
+        // close Scanner
+        sc.close();
+
+        // size maze
+        maze = new char[lines][columns];
+
+        // print maze
+        Initialize(lines, columns, maze);
     }
 
-    public static void Initialize(int l,int c, char t[][]) {
-        for(int i = 0; i < l; i++) {
-            for(int j = 0; j < c; j++) {
-                System.out.print((t[i][j] == 0) ? "+---" : "    ");
+    public static void Initialize(int lines,int columns, char maze[][]) {
+        for(int i = 0; i < lines; i++) {
+
+            // creating north walls
+            for(int j = 0; j < columns; j++) {
+                System.out.print((maze[i][j] == 0) ? "+---" : "    ");
             }
             System.out.println("+");
-            for(int j = 0; j < c; j++) {
-                System.out.print((t[i][j] == 0) ? "|   " : "    ");
+
+            // creating west walls
+            for(int j = 0; j < columns; j++) {
+                System.out.print((maze[i][j] == 0) ? "|   " : "    ");
             }
             System.out.println("|");
         }
-        for (int j = 0; j < c; j++) {
+
+        // bottom line
+        for (int j = 0; j < columns; j++) {
 			System.out.print("+---");
 		}
 		System.out.println("+");
