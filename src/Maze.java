@@ -43,10 +43,9 @@ public class Maze {
         System.out.println(" ");
         sc.close();
 
-        int startY = (int)(Math.floor((Math.random() * (rows - 0)) + 0));
-        int startX = (int)(Math.floor((Math.random() * (columns - 0)) + 0));
-        System.out.println("StartY : " + startY);
-        System.out.println("StartX : " + startX);
+        // initialize starting points
+        int startY = (int)(Math.floor((Math.random() * ((rows-1) - 1)) + 1));
+        int startX = (int)(Math.floor((Math.random() * ((columns-1) - 1)) + 1));
 
         // size maze
         mazeL = new char[rows][columns];
@@ -92,54 +91,70 @@ public class Maze {
         String[] directions = { "North", "South", "East", "West"};
         String dir = directions[(int) (Math.floor(Math.random() * directions.length))];
 
-        // int dir = (int)(Math.floor((Math.random() * (4 - 0)) + 0));
+        // actual debug
         System.out.println("StartY : " + startY);
         System.out.println("StartX : " + startX);
+        System.out.println(" ");
+
+        // stay in range
         if(startX == 0)
             startX += 1;
+        if(startX == columns)
+            startX -= 1;
         if(startY == 0)
             startY += 1;
+        if(startY == rows)
+            startY -= 1;
 
-        if(check[startY][startX] == false) {
-            check[startY][startX] = true;
-            if(dir == "North") {
+        // maze generation
+        check[startY][startX] = true;
+        if(dir == "North") {
+            if(check[startY-1][startX] == false && mazeL[startY-1][startX] >= 0 && mazeL[startY-1][startX] <= rows)
                 try {
                     mazeL[startY][startX] = 1;
                     generation(rows, columns, mazeL, mazeC, check, (startY-1), startX);
                 } catch(Exception e) {
                     dir = "South";
                 }
-            }
-            if(dir == "South") {
+            else 
+                dir = "South";
+        }
+        if(dir == "South") {
+            if(check[startY+1][startX] == false && mazeL[startY+1][startX] >= 0 && mazeL[startY-1][startX] <= rows)
                 try {
                     mazeL[startY+1][startX] = 1;
                     generation(rows, columns, mazeL, mazeC, check, (startY+1), startX);
                 } catch(Exception e) {
                     dir = "East";
                 }
-            }
-            if(dir == "East") {
+            else 
+                dir = "East";
+        }
+        if(dir == "East") {
+            if(check[startY][startX-1] == false && mazeL[startY][startX-1] >= 0 && mazeL[startY][startX-1] <= columns)
                 try {
                     mazeC[startY][startX] = 1;
                     generation(rows, columns, mazeL, mazeC, check, startY, (startX-1));
                 } catch(Exception e) {
                     dir = "West";
                 }
-            }
-            if(dir == "West") {
+            else 
+                dir = "West";
+        }
+        if(dir == "West") {
+            if(check[startY][startX+1] == false && mazeL[startY][startX+1] >= 0 && mazeL[startY][startX+1] <= columns)
                 try {
                     mazeC[startY][startX+1] = 1;
                     generation(rows, columns, mazeL, mazeC, check, startY, (startX+1));
                 } catch(Exception e) {
-                    startY = (int)(Math.floor((Math.random() * (rows - 0)) + 0));
-                    startX = (int)(Math.floor((Math.random() * (columns - 0)) + 0));
-                    generation(rows, columns, mazeL, mazeC, check, startY, startX);
+                    dir = "North";
                 }
+            else {
+                // dir = "North";
+                startY = (int)(Math.floor((Math.random() * (rows - 0)) + 0));
+                startX = (int)(Math.floor((Math.random() * (columns - 0)) + 0));
+                generation(rows, columns, mazeL, mazeC, check, startY, startX);
             }
-        else 
-            startY = (int)(Math.floor((Math.random() * (rows - 0)) + 0));
-            startX = (int)(Math.floor((Math.random() * (columns - 0)) + 0));
-            generation(rows, columns, mazeL, mazeC, check, startY, startX);
         }
     }
 }
