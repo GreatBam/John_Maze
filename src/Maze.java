@@ -3,7 +3,7 @@ import java.util.InputMismatchException;
 
 public class Maze {
     public static void main(String[] args) {
-        int rows = 0, columns = 0; char maze[][]; Scanner sc = new Scanner(System.in);
+        int rows = 0, columns = 0; char mazeL[][];char mazeC[][]; boolean check[][]; Scanner sc = new Scanner(System.in);
 
         // checking for integers
         while(true) {
@@ -43,26 +43,40 @@ public class Maze {
         System.out.println(" ");
         sc.close();
 
+        int startY = (int)(Math.floor((Math.random() * (rows - 0)) + 0));
+        int startX = (int)(Math.floor((Math.random() * (columns - 0)) + 0));
+        System.out.println("StartY : " + startY);
+        System.out.println("StartX : " + startX);
+
         // size maze
-        maze = new char[rows][columns];
+        mazeL = new char[rows][columns];
+        mazeC = new char[rows][columns];
+        check = new boolean[rows][columns];
+
+        // set all cells unvisited
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                check[i][j] = false;
+            }
+        }
 
         // display maze
-        generation(rows, columns, maze);
-        display(rows, columns, maze);
+        generation(rows, columns, mazeL, mazeC, check, startY, startX);
+        display(rows, columns, mazeL, mazeC);
     }
 
-    public static void display(int rows,int columns, char maze[][]) {
+    public static void display(int rows,int columns, char mazeL[][], char mazeC[][]) {
         for(int i = 0; i < rows; i++) {
 
             // creating north walls
             for(int j = 0; j < columns; j++) {
-                System.out.print(((maze[i][j] & 1) == 0) ? "+---" : "    ");
+                System.out.print((mazeL[i][j] == 0) ? "+---" : "    ");
             }
             System.out.println("+");
 
             // creating west walls
             for(int j = 0; j < columns; j++) {
-                System.out.print(((maze[i][j] & 8) == 0) ? "|   " : "    ");
+                System.out.print((mazeC[i][j] == 0) ? "|   " : "    ");
             }
             System.out.println("|");
         }
@@ -74,25 +88,58 @@ public class Maze {
 		System.out.println("+");
     }
 
-    public static void generation(int rows, int columns, char maze[][]) {
-        boolean check[][] = new boolean[rows][columns];
+    public static void generation(int rows, int columns, char mazeL[][], char mazeC[][], boolean check[][], int startY, int startX) {
+        String[] directions = { "North", "South", "East", "West"};
+        String dir = directions[(int) (Math.floor(Math.random() * directions.length))];
 
-        // set all cells unvisited
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < columns; j++) {
-                check[i][j] = false;
-            }
-        }
-
-        int startY = (int)(Math.floor((Math.random() * (rows - 0)) + 0));
-        int startX = (int)(Math.floor((Math.random() * (columns - 0)) + 0));
+        // int dir = (int)(Math.floor((Math.random() * (4 - 0)) + 0));
         System.out.println("StartY : " + startY);
         System.out.println("StartX : " + startX);
+        if(startX == 0)
+            startX += 1;
+        if(startY == 0)
+            startY += 1;
 
-        check[startY][startX] = true;
-        (maze[startY][startX] & 1) = 1;
-
-
-
+        if(check[startY][startX] == false) {
+            check[startY][startX] = true;
+            if(dir == "North") {
+                try {
+                    mazeL[startY][startX] = 1;
+                    generation(rows, columns, mazeL, mazeC, check, (startY-1), startX);
+                } catch(Exception e) {
+                    dir = "South";
+                }
+            }
+            if(dir == "South") {
+                try {
+                    mazeL[startY+1][startX] = 1;
+                    generation(rows, columns, mazeL, mazeC, check, (startY+1), startX);
+                } catch(Exception e) {
+                    dir = "East";
+                }
+            }
+            if(dir == "East") {
+                try {
+                    mazeC[startY][startX] = 1;
+                    generation(rows, columns, mazeL, mazeC, check, startY, (startX-1));
+                } catch(Exception e) {
+                    dir = "West";
+                }
+            }
+            if(dir == "West") {
+                try {
+                    mazeC[startY][startX+1] = 1;
+                    generation(rows, columns, mazeL, mazeC, check, startY, (startX+1));
+                } catch(Exception e) {
+                    startY = (int)(Math.floor((Math.random() * (rows - 0)) + 0));
+                    startX = (int)(Math.floor((Math.random() * (columns - 0)) + 0));
+                    generation(rows, columns, mazeL, mazeC, check, startY, startX);
+                }
+            }
+        else 
+            startY = (int)(Math.floor((Math.random() * (rows - 0)) + 0));
+            startX = (int)(Math.floor((Math.random() * (columns - 0)) + 0));
+            generation(rows, columns, mazeL, mazeC, check, startY, startX);
+        }
     }
 }
