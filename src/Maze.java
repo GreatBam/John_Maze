@@ -3,14 +3,14 @@ import java.util.InputMismatchException;
 
 public class Maze {
     public static void main(String[] args) {
-        int lines = 0, columns = 0; char maze[][]; Scanner sc = new Scanner(System.in);
+        int rows = 0, columns = 0; char maze[][]; Scanner sc = new Scanner(System.in);
 
         // checking for integers
         while(true) {
             try {
-                System.out.print("How many lines: ");
-                lines = sc.nextInt();
-                if((lines >= 0 && lines <= Integer.MAX_VALUE)) {
+                System.out.print("How many rows: ");
+                rows = sc.nextInt();
+                if((rows >= 0 && rows <= Integer.MAX_VALUE)) {
                     System.out.println("Set");
                     System.out.println(" ");
                     break;
@@ -19,7 +19,7 @@ public class Maze {
             catch(InputMismatchException ex) {
                 System.out.println("Error : invalid value");
                 System.out.println(" ");
-                String s = sc.next();
+                sc.next();
             }           
         }
         while(true) {
@@ -35,33 +35,34 @@ public class Maze {
             catch(InputMismatchException ex) {
                 System.out.println("Error : invalid value");
                 System.out.println(" ");
-                String s = sc.next();
+                sc.next();
             }           
         }
-        System.out.println("Lines   : " + lines);
+        System.out.println("Lines   : " + rows);
         System.out.println("Columns : " + columns);
         System.out.println(" ");
         sc.close();
 
         // size maze
-        maze = new char[lines][columns];
+        maze = new char[rows][columns];
 
         // display maze
-        display(lines, columns, maze);
+        generation(rows, columns, maze);
+        display(rows, columns, maze);
     }
 
-    public static void display(int lines,int columns, char maze[][]) {
-        for(int i = 0; i < lines; i++) {
+    public static void display(int rows,int columns, char maze[][]) {
+        for(int i = 0; i < rows; i++) {
 
             // creating north walls
             for(int j = 0; j < columns; j++) {
-                System.out.print((maze[i][j] == 0) ? "+---" : "    ");
+                System.out.print(((maze[i][j] & 1) == 0) ? "+---" : "    ");
             }
             System.out.println("+");
 
             // creating west walls
             for(int j = 0; j < columns; j++) {
-                System.out.print((maze[i][j] == 0) ? "|   " : "    ");
+                System.out.print(((maze[i][j] & 8) == 0) ? "|   " : "    ");
             }
             System.out.println("|");
         }
@@ -71,5 +72,27 @@ public class Maze {
 			System.out.print("+---");
 		}
 		System.out.println("+");
-    }      
+    }
+
+    public static void generation(int rows, int columns, char maze[][]) {
+        boolean check[][] = new boolean[rows][columns];
+
+        // set all cells unvisited
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                check[i][j] = false;
+            }
+        }
+
+        int startY = (int)(Math.floor((Math.random() * (rows - 0)) + 0));
+        int startX = (int)(Math.floor((Math.random() * (columns - 0)) + 0));
+        System.out.println("StartY : " + startY);
+        System.out.println("StartX : " + startX);
+
+        check[startY][startX] = true;
+        (maze[startY][startX] & 1) = 1;
+
+
+
+    }
 }
