@@ -12,13 +12,13 @@ public class Maze {
                 rows = sc.nextInt();
                 if((rows >= 0 && rows <= Integer.MAX_VALUE)) {
                     System.out.println("Set");
-                    System.out.println(" ");
+                    System.out.println();
                     break;
                 }
             }
             catch(InputMismatchException ex) {
                 System.out.println("Error : invalid value");
-                System.out.println(" ");
+                System.out.println();
                 sc.next();
             }           
         }
@@ -28,19 +28,19 @@ public class Maze {
                 columns = sc.nextInt();
                 if((columns >= 0 && columns <= Integer.MAX_VALUE)) {
                     System.out.println("Set");
-                    System.out.println(" ");
+                    System.out.println();
                     break;
                 }
             }
             catch(InputMismatchException ex) {
                 System.out.println("Error : invalid value");
-                System.out.println(" ");
+                System.out.println();
                 sc.next();
             }           
         }
         System.out.println("Lines   : " + rows);
         System.out.println("Columns : " + columns);
-        System.out.println(" ");
+        System.out.println();
         sc.close();
 
         // initialize starting points
@@ -59,9 +59,125 @@ public class Maze {
             }
         }
 
-        // display maze
+        // generate maze
         generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+    }
+
+    public static void generate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run) {
+        int cylce = 0;
+        String[] directions = { "North", "South", "East", "West"};
+        String dir = directions[(int) (Math.floor(Math.random() * directions.length))];
+        run += 1;
+            
+        // maze generation
+        check[frontierY][frontierX] = true;
+        while(true) {
+            if(dir == "North") {
+                cylce += 1;
+                if(((frontierY-1) >= 0) && ((frontierY-1) < rows)) {
+                    if(check[frontierY-1][frontierX] == false) {
+                        mazeY[frontierY][frontierX] = 1;
+                        frontierY -= 1;
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        break;
+                    } else {
+                        dir = "South";
+                    }
+                } else {
+                    dir = "South";
+                }
+            }
+            if(dir == "South") {
+                cylce += 1;
+                if(((frontierY+1) >= 0) && ((frontierY+1) < rows)) {
+                    if(check[frontierY+1][frontierX] == false) {
+                        mazeY[frontierY+1][frontierX] = 1;
+                        frontierY += 1;
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        break;
+                    } else {
+                        dir = "West";
+                    }
+                } else {
+                    dir = "West";
+                }
+            }
+            if(dir == "West") {
+                cylce += 1;
+                if(((frontierX-1) >= 0) && ((frontierX-1) < columns)) {
+                    if(check[frontierY][frontierX-1] == false) {
+                        mazeX[frontierY][frontierX] = 1;
+                        frontierX -= 1;
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        break;
+                    } else {
+                        dir = "East";
+                    }
+                } else { 
+                    dir = "East";
+                }
+            }
+            if(dir == "East") {
+                cylce += 1;
+                if(((frontierX+1) >= 0) && ((frontierX+1) < columns)) {
+                    if(check[frontierY][frontierX+1] == false) {
+                        mazeX[frontierY][frontierX+1] = 1;
+                        frontierX += 1;
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        break;
+                    } else {
+                        dir = "North";
+                    }
+                } else {
+                    dir = "North";
+                }
+            }
+            if(cylce > 4) {
+                terminate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                break;
+            }
+        }
+    }
+
+    public static void terminate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run) {
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                if(((i-1) >= 0) && ((i-1) < rows)) {
+                    if(check[i][j] == true && check[i-1][j] == false) {
+                        frontierY = i;
+                        frontierX = j;
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        break;
+                    }
+                }
+                if(((i+1) >= 0) && ((i+1) < rows)) {
+                    if(check[i][j] == true && check[i+1][j] == false) {
+                        frontierY = i;
+                        frontierX = j;
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        break;
+                    }
+                }
+                if(((j-1) >= 0) && ((j-1) < columns)) {
+                    if(check[i][j] == true && check[i][j-1] == false) {
+                        frontierY = i;
+                        frontierX = j;
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        break;
+                    }
+                }
+                if(((j+1) >= 0) && ((j+1) < columns)) {
+                    if(check[i][j] == true && check[i][j+1] == false) {
+                        frontierY = i;
+                        frontierX = j;
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        break;
+                    }
+                }
+            }
+        }
         display(rows, columns, mazeY, mazeX);
+        System.exit(0);
     }
 
     public static void display(int rows,int columns, char mazeY[][], char mazeX[][]) {
@@ -85,104 +201,5 @@ public class Maze {
 			System.out.print("+---");
 		}
 		System.out.println("+");
-    }
-
-    public static void generate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run) {
-        int cylce = 0;
-        String[] directions = { "North", "South", "East", "West"};
-        String dir = directions[(int) (Math.floor(Math.random() * directions.length))];
-        run += 1;
-            
-        // maze generation
-        if(check[frontierY][frontierX] == false) {
-            check[frontierY][frontierX] = true;
-
-            // actual debug
-            System.out.println("Run : " + run);
-            System.out.println("Y : " + frontierY);
-            System.out.println("X : " + frontierX);
-            System.out.println("direction : " + dir);
-            // System.out.println(" ");
-            // check[frontierY][frontierX] = true;
-
-            while(true) {
-                if(dir == "North") {
-                    cylce += 1;
-                    if(((frontierY-1) >= 0) && ((frontierY-1) < rows)) {
-                        if(check[frontierY-1][frontierX] == false) {
-                            System.out.println("North");
-                            System.out.println(" ");
-                            mazeY[frontierY][frontierX] = 1;
-                            frontierY -= 1;
-                            generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
-                            break;
-                        } else {
-                            dir = "South";
-                        }
-                    } else {
-                        dir = "South";
-                    }
-                }
-                if(dir == "South") {
-                    cylce += 1;
-                    if(((frontierY+1) >= 0) && ((frontierY+1) < rows)) {
-                        if(check[frontierY+1][frontierX] == false) {
-                            System.out.println("South");
-                            System.out.println(" ");
-                            mazeY[frontierY+1][frontierX] = 1;
-                            frontierY += 1;
-                            generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
-                            break;
-                        } else {
-                            dir = "West";
-                        }
-                    } else {
-                        dir = "West";
-                    }
-                }
-                if(dir == "West") {
-                    cylce += 1;
-                    if(((frontierX-1) >= 0) && ((frontierX-1) < columns)) {
-                        if(check[frontierY][frontierX-1] == false) {
-                            System.out.println("West");
-                            System.out.println(" ");
-                            mazeX[frontierY][frontierX] = 1;
-                            frontierX -= 1;
-                            generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
-                            break;
-                        } else {
-                            dir = "East";
-                        }
-                    } else { 
-                        dir = "East";
-                    }
-                }
-                if(dir == "East") {
-                    cylce += 1;
-                    if(((frontierX+1) >= 0) && ((frontierX+1) < columns)) {
-                        if(check[frontierY][frontierX+1] == false) {
-                            System.out.println("East");
-                            System.out.println(" ");
-                            mazeX[frontierY][frontierX+1] = 1;
-                            frontierX += 1;
-                            generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
-                            break;
-                        } else {
-                            dir = "North";
-                        }
-                    } else {
-                        dir = "North";
-                    }
-                }
-                if(cylce > 4) {
-                    System.out.println("exit");
-                    System.out.println();
-                    break;
-                }
-            }
-        } else {
-            System.out.println("exit");
-            System.out.println();
-        }
     }
 }
