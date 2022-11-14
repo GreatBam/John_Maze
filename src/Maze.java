@@ -67,6 +67,7 @@ public class Maze {
         int cylce = 0;
         String[] directions = { "North", "South", "East", "West"};
         String dir = directions[(int) (Math.floor(Math.random() * directions.length))];
+        mazeY[0][0] = 1;
         run += 1;
             
         // maze generation
@@ -197,9 +198,9 @@ public class Maze {
         }
 
         // creating bottom line
-        for (int j = 0; j < columns; j++) {
+        for (int j = 0; j < columns-1; j++) {
 			System.out.print("+---");
 		}
-		System.out.println("+");
+        System.out.println("+   +");
     }
 }
