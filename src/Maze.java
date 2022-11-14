@@ -177,11 +177,11 @@ public class Maze {
                 }
             }
         }
-        display(rows, columns, mazeY, mazeX);
+        display(rows, columns, mazeY, mazeX, run);
         System.exit(0);
     }
 
-    public static void display(int rows,int columns, char mazeY[][], char mazeX[][]) {
+    public static void display(int rows,int columns, char mazeY[][], char mazeX[][], int run) {
         for(int i = 0; i < rows; i++) {
 
             // creating north walls
@@ -202,5 +202,8 @@ public class Maze {
 			System.out.print("+---");
 		}
         System.out.println("+   +");
+        System.out.println("");
+        System.out.println("Number of iteration : " + run);
+        System.out.println("");
     }
 }
