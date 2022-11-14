@@ -65,9 +65,11 @@ public class Maze {
         }
 
         // generate maze
+        pathY = (rows-1)/2;
+        pathX = (columns-1)/2;
         generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
         solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
-        display(rows, columns, mazeY, mazeX, run, path);
+        display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
     }
 
     public static void generate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run, boolean path[][]) {
@@ -192,50 +194,44 @@ public class Maze {
 
         if(((pathX+1) >= 0) && ((pathX+1) < columns)) {
             if(mazeX[pathY][pathX+1] == 1) {
-                if(path[pathY][pathX+1] == false) {
-                    if(visited[pathY][pathX+1] == false) {
-                        pathX += 1;
-                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
-                    }
+                if(visited[pathY][pathX+1] == false) {
+                    pathX += 1;
+                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
                 }
             }
         }
 
         if(((pathY+1) >= 0) && ((pathY+1) < rows)) {
             if(mazeY[pathY+1][pathX] == 1) {
-                if(path[pathY+1][pathX] == false) {
-                    if(visited[pathY+1][pathX] == false) {
-                        pathY += 1;
-                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
-                    }
+                if(visited[pathY+1][pathX] == false) {
+                    pathY += 1;
+                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
                 }
             }
         }
 
-        if(((pathX-1) >= 0) && ((pathX-1) < columns)) {
-            if(mazeX[pathY][pathX] == 1) {
-                if(path[pathY][pathX-1] == false) {
-                    if(visited[pathY][pathX-1] == false) {
-                        pathX -= 1;
-                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
-                    }
-                }
-            }
-        }
+        display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
 
-        if(((pathY-1) >= 0) && ((pathY-1) < rows)) {
-            if(mazeY[pathY][pathX] == 1) {
-                if(path[pathY-1][pathX] == false) {
-                    if(visited[pathY-1][pathX] == false) {
-                        pathY -= 1;
-                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
-                    }
-                }
-            }
-        }
+        // if(((pathX-1) >= 0) && ((pathX-1) < columns)) {
+        //     if(mazeX[pathY][pathX] == 1) {
+        //         if(visited[pathY][pathX-1] == false) {
+        //             pathX -= 1;
+        //             solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+        //         }
+        //     }
+        // }
+
+        // if(((pathY-1) >= 0) && ((pathY-1) < rows)) {
+        //     if(mazeY[pathY][pathX] == 1) {
+        //         if(visited[pathY-1][pathX] == false) {
+        //             pathY -= 1;
+        //             solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+        //         }
+        //     }
+        // }
     }
 
-    public static void display(int rows,int columns, char mazeY[][], char mazeX[][], int run, boolean path[][]) {
+    public static void display(int rows,int columns, char mazeY[][], char mazeX[][], int run, boolean path[][], int pathX, int pathY) {
         for(int i = 0; i < rows; i++) {
 
             // creating north walls
@@ -267,11 +263,12 @@ public class Maze {
         for (int j = 0; j < columns-1; j++) {
 			System.out.print("+---");
 		}
+        System.out.println("+   +");
 
         // iteration counter
-        System.out.println("+   +");
         System.out.println("");
-        System.out.println("Number of iteration : " + run);
+        System.out.println("Path X : " + pathX);
+        System.out.println("Path Y : " + pathY);
         System.out.println("");
     }
 }
