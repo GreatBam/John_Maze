@@ -3,7 +3,7 @@ import java.util.InputMismatchException;
 
 public class Maze {
     public static void main(String[] args) {
-        int rows = 0, columns = 0; char mazeY[][];char mazeX[][]; boolean check[][]; Scanner sc = new Scanner(System.in); int run = 0; boolean visited[][];
+        int rows = 0, columns = 0; char mazeY[][];char mazeX[][]; boolean check[][]; Scanner sc = new Scanner(System.in); int run = 0; boolean path[][];
 
         // ask for number of rows/columns
         while(true) {
@@ -51,22 +51,23 @@ public class Maze {
         mazeY = new char[rows][columns];
         mazeX = new char[rows][columns];
         check = new boolean[rows][columns];
-        visited = new boolean[rows][columns];
+        path = new boolean[rows][columns];
 
         // set all cells unvisited
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
                 check[i][j] = false;
-                visited[i][j] = false;
+                path[i][j] = false;
             }
         }
 
         // generate maze
-        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
-        display(rows, columns, mazeY, mazeX, run, visited);
+        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
+        solver(rows, columns, mazeY, mazeX, run, path);
+        display(rows, columns, mazeY, mazeX, run, path);
     }
 
-    public static void generate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run, boolean visited[][]) {
+    public static void generate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run, boolean path[][]) {
         int cylce = 0;
         String[] directions = { "North", "South", "East", "West"};
         String dir = directions[(int) (Math.floor(Math.random() * directions.length))];
@@ -82,7 +83,7 @@ public class Maze {
                     if(check[frontierY-1][frontierX] == false) {
                         mazeY[frontierY][frontierX] = 1;
                         frontierY -= 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     } else {
                         dir = "South";
@@ -97,7 +98,7 @@ public class Maze {
                     if(check[frontierY+1][frontierX] == false) {
                         mazeY[frontierY+1][frontierX] = 1;
                         frontierY += 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     } else {
                         dir = "West";
@@ -112,7 +113,7 @@ public class Maze {
                     if(check[frontierY][frontierX-1] == false) {
                         mazeX[frontierY][frontierX] = 1;
                         frontierX -= 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     } else {
                         dir = "East";
@@ -127,7 +128,7 @@ public class Maze {
                     if(check[frontierY][frontierX+1] == false) {
                         mazeX[frontierY][frontierX+1] = 1;
                         frontierX += 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     } else {
                         dir = "North";
@@ -137,20 +138,20 @@ public class Maze {
                 }
             }
             if(cylce > 4) {
-                terminate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
+                terminate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                 break;
             }
         }
     }
 
-    public static void terminate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run, boolean visited[][]) {
+    public static void terminate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run, boolean path[][]) {
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
                 if(((i-1) >= 0) && ((i-1) < rows)) {
                     if(check[i][j] == true && check[i-1][j] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     }
                 }
@@ -158,7 +159,7 @@ public class Maze {
                     if(check[i][j] == true && check[i+1][j] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     }
                 }
@@ -166,7 +167,7 @@ public class Maze {
                     if(check[i][j] == true && check[i][j-1] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     }
                 }
@@ -174,7 +175,7 @@ public class Maze {
                     if(check[i][j] == true && check[i][j+1] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     }
                 }
@@ -182,7 +183,11 @@ public class Maze {
         }
     }
 
-    public static void display(int rows,int columns, char mazeY[][], char mazeX[][], int run, boolean visited[][]) {
+    public static void solver(int rows,int columns, char mazeY[][], char mazeX[][], int run, boolean path[][]) {
+        path[0][0] = true;
+    }
+
+    public static void display(int rows,int columns, char mazeY[][], char mazeX[][], int run, boolean path[][]) {
         for(int i = 0; i < rows; i++) {
 
             // creating north walls
@@ -193,7 +198,19 @@ public class Maze {
 
             // creating west walls
             for(int j = 0; j < columns; j++) {
-                System.out.print((mazeX[i][j] == 0) ? "|   " : "    ");
+                if(mazeX[i][j] == 0) {
+                    if(path[i][j] == false) {
+                        System.out.print("|   ");
+                    } else {
+                        System.out.print("| # ");
+                    }
+                } else {
+                    if(path[i][j] == false) {
+                        System.out.print("    ");
+                    } else {
+                        System.out.print("  # ");
+                    }
+                }
             }
             System.out.println("|");
         }
@@ -202,6 +219,8 @@ public class Maze {
         for (int j = 0; j < columns-1; j++) {
 			System.out.print("+---");
 		}
+
+        // iteration counter
         System.out.println("+   +");
         System.out.println("");
         System.out.println("Number of iteration : " + run);
