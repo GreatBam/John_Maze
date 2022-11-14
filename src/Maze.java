@@ -189,6 +189,8 @@ public class Maze {
     }
 
     public static void solver(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY, int run, boolean visited[][]) {
+        display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
+
         path[pathY][pathX] = true;
         visited[pathY][pathX] = true;
 
@@ -209,8 +211,6 @@ public class Maze {
                 }
             }
         }
-
-        display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
 
         // if(((pathX-1) >= 0) && ((pathX-1) < columns)) {
         //     if(mazeX[pathY][pathX] == 1) {
