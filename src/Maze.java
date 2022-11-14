@@ -63,6 +63,7 @@ public class Maze {
 
         // generate maze
         generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
+        display(rows, columns, mazeY, mazeX, run, visited);
     }
 
     public static void generate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run, boolean visited[][]) {
@@ -179,8 +180,6 @@ public class Maze {
                 }
             }
         }
-        display(rows, columns, mazeY, mazeX, run, visited);
-        System.exit(0);
     }
 
     public static void display(int rows,int columns, char mazeY[][], char mazeX[][], int run, boolean visited[][]) {
