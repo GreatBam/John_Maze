@@ -4,6 +4,7 @@ import java.util.InputMismatchException;
 public class Maze {
     public static void main(String[] args) {
         int rows = 0, columns = 0; char mazeY[][];char mazeX[][]; boolean check[][]; Scanner sc = new Scanner(System.in); int run = 0; boolean path[][];
+        int pathY = 0; int pathX = 0; boolean visited[][];
 
         // ask for number of rows/columns
         while(true) {
@@ -52,18 +53,20 @@ public class Maze {
         mazeX = new char[rows][columns];
         check = new boolean[rows][columns];
         path = new boolean[rows][columns];
+        visited = new boolean[rows][columns];
 
         // set all cells unvisited
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
                 check[i][j] = false;
                 path[i][j] = false;
+                visited[i][j] = false;
             }
         }
 
         // generate maze
         generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
-        solver(rows, columns, mazeY, mazeX, run, path);
+        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
         display(rows, columns, mazeY, mazeX, run, path);
     }
 
@@ -183,8 +186,53 @@ public class Maze {
         }
     }
 
-    public static void solver(int rows,int columns, char mazeY[][], char mazeX[][], int run, boolean path[][]) {
-        path[0][0] = true;
+    public static void solver(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY, int run, boolean visited[][]) {
+        path[pathY][pathX] = true;
+        visited[pathY][pathX] = true;
+
+        if(((pathX+1) >= 0) && ((pathX+1) < columns)) {
+            if(mazeX[pathY][pathX+1] == 1) {
+                if(path[pathY][pathX+1] == false) {
+                    if(visited[pathY][pathX+1] == false) {
+                        pathX += 1;
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+                    }
+                }
+            }
+        }
+
+        if(((pathY+1) >= 0) && ((pathY+1) < rows)) {
+            if(mazeY[pathY+1][pathX] == 1) {
+                if(path[pathY+1][pathX] == false) {
+                    if(visited[pathY+1][pathX] == false) {
+                        pathY += 1;
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+                    }
+                }
+            }
+        }
+
+        if(((pathX-1) >= 0) && ((pathX-1) < columns)) {
+            if(mazeX[pathY][pathX] == 1) {
+                if(path[pathY][pathX-1] == false) {
+                    if(visited[pathY][pathX-1] == false) {
+                        pathX -= 1;
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+                    }
+                }
+            }
+        }
+
+        if(((pathY-1) >= 0) && ((pathY-1) < rows)) {
+            if(mazeY[pathY][pathX] == 1) {
+                if(path[pathY-1][pathX] == false) {
+                    if(visited[pathY-1][pathX] == false) {
+                        pathY -= 1;
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+                    }
+                }
+            }
+        }
     }
 
     public static void display(int rows,int columns, char mazeY[][], char mazeX[][], int run, boolean path[][]) {
