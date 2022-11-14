@@ -3,7 +3,7 @@ import java.util.InputMismatchException;
 
 public class Maze {
     public static void main(String[] args) {
-        int rows = 0, columns = 0; char mazeY[][];char mazeX[][]; boolean check[][]; Scanner sc = new Scanner(System.in); int run = 0;
+        int rows = 0, columns = 0; char mazeY[][];char mazeX[][]; boolean check[][]; Scanner sc = new Scanner(System.in); int run = 0; boolean visited[][];
 
         // ask for number of rows/columns
         while(true) {
@@ -51,19 +51,21 @@ public class Maze {
         mazeY = new char[rows][columns];
         mazeX = new char[rows][columns];
         check = new boolean[rows][columns];
+        visited = new boolean[rows][columns];
 
         // set all cells unvisited
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
                 check[i][j] = false;
+                visited[i][j] = false;
             }
         }
 
         // generate maze
-        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
     }
 
-    public static void generate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run) {
+    public static void generate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run, boolean visited[][]) {
         int cylce = 0;
         String[] directions = { "North", "South", "East", "West"};
         String dir = directions[(int) (Math.floor(Math.random() * directions.length))];
@@ -79,7 +81,7 @@ public class Maze {
                     if(check[frontierY-1][frontierX] == false) {
                         mazeY[frontierY][frontierX] = 1;
                         frontierY -= 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
                         break;
                     } else {
                         dir = "South";
@@ -94,7 +96,7 @@ public class Maze {
                     if(check[frontierY+1][frontierX] == false) {
                         mazeY[frontierY+1][frontierX] = 1;
                         frontierY += 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
                         break;
                     } else {
                         dir = "West";
@@ -109,7 +111,7 @@ public class Maze {
                     if(check[frontierY][frontierX-1] == false) {
                         mazeX[frontierY][frontierX] = 1;
                         frontierX -= 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
                         break;
                     } else {
                         dir = "East";
@@ -124,7 +126,7 @@ public class Maze {
                     if(check[frontierY][frontierX+1] == false) {
                         mazeX[frontierY][frontierX+1] = 1;
                         frontierX += 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
                         break;
                     } else {
                         dir = "North";
@@ -134,20 +136,20 @@ public class Maze {
                 }
             }
             if(cylce > 4) {
-                terminate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                terminate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
                 break;
             }
         }
     }
 
-    public static void terminate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run) {
+    public static void terminate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run, boolean visited[][]) {
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
                 if(((i-1) >= 0) && ((i-1) < rows)) {
                     if(check[i][j] == true && check[i-1][j] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
                         break;
                     }
                 }
@@ -155,7 +157,7 @@ public class Maze {
                     if(check[i][j] == true && check[i+1][j] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
                         break;
                     }
                 }
@@ -163,7 +165,7 @@ public class Maze {
                     if(check[i][j] == true && check[i][j-1] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
                         break;
                     }
                 }
@@ -171,17 +173,17 @@ public class Maze {
                     if(check[i][j] == true && check[i][j+1] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, visited);
                         break;
                     }
                 }
             }
         }
-        display(rows, columns, mazeY, mazeX, run);
+        display(rows, columns, mazeY, mazeX, run, visited);
         System.exit(0);
     }
 
-    public static void display(int rows,int columns, char mazeY[][], char mazeX[][], int run) {
+    public static void display(int rows,int columns, char mazeY[][], char mazeX[][], int run, boolean visited[][]) {
         for(int i = 0; i < rows; i++) {
 
             // creating north walls
