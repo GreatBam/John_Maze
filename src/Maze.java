@@ -189,48 +189,57 @@ public class Maze {
     }
 
     public static void solver(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY, int run, boolean visited[][]) {
+        
         display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
         
-        path[pathY][pathX] = true;
-        visited[pathY][pathX] = true;
+        while(true) {
+            visited[pathY][pathX] = true;
+            path[pathY][pathX] = true;
 
-        if(pathX == (columns) && (pathY == (rows))) {
-            System.out.println("done");
-            System.exit(0);
-        }
-
-        if(((pathX+1) >= 0) && ((pathX+1) < columns)) {
-            if(mazeX[pathY][pathX+1] == 1) {
-                if(visited[pathY][pathX+1] == false) {
-                    pathX += 1;
-                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+            if(pathX == (columns-1) && (pathY == (rows-1))) {
+                path[pathY][pathX] = true;
+                System.out.println("done");
+                System.out.println();
+                break;
+            }
+            
+            if(((pathX+1) >= 0) && ((pathX+1) < columns)) {
+                if(mazeX[pathY][pathX+1] == 1) {
+                    if(visited[pathY][pathX+1] == false) {
+                        pathX += 1;
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+                        break;
+                    }
                 }
             }
-        }
-
-        if(((pathY+1) >= 0) && ((pathY+1) < rows)) {
-            if(mazeY[pathY+1][pathX] == 1) {
-                if(visited[pathY+1][pathX] == false) {
-                    pathY += 1;
-                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+            
+            if(((pathY+1) >= 0) && ((pathY+1) < rows)) {
+                if(mazeY[pathY+1][pathX] == 1) {
+                    if(visited[pathY+1][pathX] == false) {
+                        pathY += 1;
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+                        break;
+                    }
                 }
             }
-        }
 
-        if(((pathX-1) >= 0) && ((pathX-1) < columns)) {
-            if(mazeX[pathY][pathX] == 1) {
-                if(visited[pathY][pathX-1] == false) {
-                    pathX -= 1;
-                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+            if(((pathX-1) >= 0) && ((pathX-1) < columns)) {
+                if(mazeX[pathY][pathX] == 1) {
+                    if(visited[pathY][pathX-1] == false) {
+                        pathX -= 1;
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+                        break;
+                    }
                 }
             }
-        }
-
-        if(((pathY-1) >= 0) && ((pathY-1) < rows)) {
-            if(mazeY[pathY][pathX] == 1) {
-                if(visited[pathY-1][pathX] == false) {
-                    pathY -= 1;
-                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+            
+            if(((pathY-1) >= 0) && ((pathY-1) < rows)) {
+                if(mazeY[pathY][pathX] == 1) {
+                    if(visited[pathY-1][pathX] == false) {
+                        pathY -= 1;
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+                        break;
+                    }
                 }
             }
         }
