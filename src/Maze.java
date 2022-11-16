@@ -191,8 +191,6 @@ public class Maze {
 
     public static void solver(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY, int run, boolean visited[][]) {
         int pathSearch = 0;
-
-        // display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
         
         while(true) {
             System.out.println("Enter loop");
