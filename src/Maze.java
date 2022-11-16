@@ -195,18 +195,19 @@ public class Maze {
         // display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
         
         while(true) {
-            // visited[pathY][pathX] = true;
-            // path[pathY][pathX] = true;
+            System.out.println("Enter loop");
+            System.out.println(pathSearch);
+            visited[pathY][pathX] = true;
+            path[pathY][pathX] = true;
             
             if(pathX == (columns-1) && (pathY == (rows-1))) {
                 path[pathY][pathX] = true;
                 System.out.println("done");
                 System.out.println();
-                System.exit(0);
                 display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
+                System.exit(0);
                 break;
             }
-            
             if(((pathX+1) >= 0) && ((pathX+1) < columns)) {
                 if(mazeX[pathY][pathX+1] == 1) {
                     if(visited[pathY][pathX+1] == false) {
@@ -218,12 +219,18 @@ public class Maze {
                         display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
                         solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
                         break;
+                    } else {
+                        System.out.println("Pass right");
+                        pathSearch += 1;
                     }
+                } else {
+                    System.out.println("Pass right");
+                    pathSearch += 1;
                 }
             } else {
+                System.out.println("Pass right");
                 pathSearch += 1;
             }
-            
             if(((pathY+1) >= 0) && ((pathY+1) < rows)) {
                 if(mazeY[pathY+1][pathX] == 1) {
                     if(visited[pathY+1][pathX] == false) {
@@ -235,12 +242,18 @@ public class Maze {
                         display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
                         solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
                         break;
+                    } else {
+                        System.out.println("Pass down");
+                        pathSearch += 1;
                     }
+                } else {
+                    System.out.println("Pass down");
+                    pathSearch += 1;
                 }
             } else {
+                System.out.println("Pass down");
                 pathSearch += 1;
             }
-
             if(((pathX-1) >= 0) && ((pathX-1) < columns)) {
                 if(mazeX[pathY][pathX] == 1) {
                     if(visited[pathY][pathX-1] == false) {
@@ -252,12 +265,18 @@ public class Maze {
                         display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
                         solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
                         break;
+                    } else {
+                        System.out.println("Pass left");
+                        pathSearch += 1;
                     }
+                } else {
+                    System.out.println("Pass left");
+                    pathSearch += 1;
                 }
             } else {
+                System.out.println("Pass left");
                 pathSearch += 1;
             }
-            
             if(((pathY-1) >= 0) && ((pathY-1) < rows)) {
                 if(mazeY[pathY][pathX] == 1) {
                     if(visited[pathY-1][pathX] == false) {
@@ -268,9 +287,16 @@ public class Maze {
                         path[pathY][pathX] = true;
                         solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
                         break;
+                    } else {
+                        System.out.println("Pass up");
+                        pathSearch += 1;
                     }
+                } else {
+                    System.out.println("Pass up");
+                    pathSearch += 1;
                 }
             } else {
+                System.out.println("Pass up");
                 pathSearch += 1;
             }
 
@@ -279,6 +305,7 @@ public class Maze {
                 display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
                 System.exit(0);
             }
+            System.out.println("End pathSearch state :>" + pathSearch);
         }
     }
 
