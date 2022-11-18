@@ -298,12 +298,41 @@ public class Maze {
                 pathSearch += 1;
             }
 
-            if(pathSearch == 4) {
-                System.out.println("Exit solving loop");
-                display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
-                System.exit(0);
+            if(pathSearch == 4 && pathX != (columns-1) && pathY != (rows-1)) {
+                for(int i = 0; i < columns; i++) {
+                    for(int j = 0; j < rows; j++) {
+                        if(visited[i+1][j] == false && mazeX[i+1][j] == 1) {
+                            pathX = i;
+                            pathY = j;
+                            solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+                            break;
+                        }
+                        if(visited[i-1][j] == false && mazeX[i][j] == 1) {
+                            pathX = i;
+                            pathY = j;
+                            solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+                            break;
+                        }
+                        if(visited[i][j+1] == false && mazeX[i][j+1] == 1) {
+                            pathX = i;
+                            pathY = j;
+                            solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+                            break;
+                        }
+                        if(visited[i][j-1] == false && mazeX[i][j] == 1) {
+                            pathX = i;
+                            pathY = j;
+                            solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
+                            break;
+                        }
+                    }
+                }
+
+                // System.out.println("Exit solving loop");
+                // display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
+                // System.exit(0);
             }
-            System.out.println("End pathSearch state :>" + pathSearch);
+            System.out.println("End pathSearch state :> " + pathSearch);
         }
     }
 
