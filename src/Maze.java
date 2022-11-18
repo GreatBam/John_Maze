@@ -3,7 +3,7 @@ import java.util.InputMismatchException;
 
 public class Maze {
     public static void main(String[] args) {
-        int rows = 0, columns = 0; char mazeY[][];char mazeX[][]; boolean check[][]; Scanner sc = new Scanner(System.in); boolean path[][];
+        int rows = 0, columns = 0; char mazeY[][];char mazeX[][]; boolean check[][]; Scanner sc = new Scanner(System.in); int run = 0; boolean path[][];
         int pathY = 0; int pathX = 0; boolean visited[][]; boolean confirmed[][];
 
         // ask for number of rows/columns
@@ -68,16 +68,17 @@ public class Maze {
         path[0][0] = true;
 
         // generate maze
-        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
-        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
-        display(rows, columns, mazeY, mazeX, path, pathX, pathY);
+        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
+        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+        // display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
     }
 
-    public static void generate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, boolean path[][]) {
+    public static void generate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run, boolean path[][]) {
         int cylce = 0;
         String[] directions = { "North", "South", "East", "West"};
         String dir = directions[(int) (Math.floor(Math.random() * directions.length))];
         mazeY[0][0] = 1;
+        run += 1;
             
         // maze generation
         check[frontierY][frontierX] = true;
@@ -88,7 +89,7 @@ public class Maze {
                     if(check[frontierY-1][frontierX] == false) {
                         mazeY[frontierY][frontierX] = 1;
                         frontierY -= 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     } else {
                         dir = "South";
@@ -103,7 +104,7 @@ public class Maze {
                     if(check[frontierY+1][frontierX] == false) {
                         mazeY[frontierY+1][frontierX] = 1;
                         frontierY += 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     } else {
                         dir = "West";
@@ -118,7 +119,7 @@ public class Maze {
                     if(check[frontierY][frontierX-1] == false) {
                         mazeX[frontierY][frontierX] = 1;
                         frontierX -= 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     } else {
                         dir = "East";
@@ -133,7 +134,7 @@ public class Maze {
                     if(check[frontierY][frontierX+1] == false) {
                         mazeX[frontierY][frontierX+1] = 1;
                         frontierX += 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     } else {
                         dir = "North";
@@ -143,21 +144,20 @@ public class Maze {
                 }
             }
             if(cylce > 4) {
-                terminate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
+                terminate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                 break;
             }
         }
     }
 
-    public static void terminate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, boolean path[][]) {
-        // finalize generation
+    public static void terminate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run, boolean path[][]) {
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
                 if(((i-1) >= 0) && ((i-1) < rows)) {
                     if(check[i][j] == true && check[i-1][j] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     }
                 }
@@ -165,7 +165,7 @@ public class Maze {
                     if(check[i][j] == true && check[i+1][j] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     }
                 }
@@ -173,7 +173,7 @@ public class Maze {
                     if(check[i][j] == true && check[i][j-1] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     }
                 }
@@ -181,7 +181,7 @@ public class Maze {
                     if(check[i][j] == true && check[i][j+1] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
                         break;
                     }
                 }
@@ -189,29 +189,26 @@ public class Maze {
         }
     }
 
-    public static void solver(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY, boolean visited[][], boolean confirmed[][]) {
+    public static void solver(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY, int run, boolean visited[][], boolean confirmed[][]) {
         int pathSearch = 0;
         
-        // maze solver
         while(true) {
             visited[pathY][pathX] = true;
             path[pathY][pathX] = true;
             
-            // if the exit is reached, display
             if(pathX == (columns-1) && (pathY == (rows-1))) {
                 path[pathY][pathX] = true;
-                // System.exit(0);
+                display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
+                System.exit(0);
                 break;
             }
-
-            // search path
             if(((pathX+1) >= 0) && ((pathX+1) < columns)) {
                 if(mazeX[pathY][pathX+1] == 1) {
                     if(visited[pathY][pathX+1] == false) {
                         pathX += 1;
                         visited[pathY][pathX] = true;
                         path[pathY][pathX] = true;
-                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                         break;
                     } else {
                         pathSearch += 1;
@@ -228,7 +225,7 @@ public class Maze {
                         pathY += 1;
                         visited[pathY][pathX] = true;
                         path[pathY][pathX] = true;
-                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                         break;
                     } else {
                         pathSearch += 1;
@@ -245,7 +242,7 @@ public class Maze {
                         pathX -= 1;
                         visited[pathY][pathX] = true;
                         path[pathY][pathX] = true;
-                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                         break;
                     } else {
                         pathSearch += 1;
@@ -262,7 +259,7 @@ public class Maze {
                         pathY -= 1;
                         visited[pathY][pathX] = true;
                         path[pathY][pathX] = true;
-                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                         break;
                     } else {
                         pathSearch += 1;
@@ -274,13 +271,13 @@ public class Maze {
                 pathSearch += 1;
             }
             if(pathSearch >= 4) {
-                backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
+                backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                 break;
             }
         }
     }
 
-    public static void backtrack(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY, boolean visited[][], boolean confirmed[][]) {
+    public static void backtrack(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY, int run, boolean visited[][], boolean confirmed[][]) {
         path[pathY][pathX] = false;
 
         // if there is a path
@@ -289,7 +286,7 @@ public class Maze {
                 if(visited[pathY][pathX+1] == false && confirmed[pathY][pathX+1] == false) {
                     path[pathY][pathX] = true;
                     pathX += 1;
-                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
+                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                 }
             }
         }
@@ -298,7 +295,7 @@ public class Maze {
                 if(visited[pathY+1][pathX] == false && confirmed[pathY+1][pathX] == false) {
                     path[pathY][pathX] = true;
                     pathY += 1;
-                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
+                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                 }
             }
         }
@@ -307,7 +304,7 @@ public class Maze {
                 if(visited[pathY][pathX-1] == false && confirmed[pathY][pathX-1] == false) {
                     path[pathY][pathX] = true;
                     pathX -= 1;
-                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
+                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                 }
             }
         }
@@ -316,7 +313,7 @@ public class Maze {
                 if(visited[pathY-1][pathX] == false && confirmed[pathY-1][pathX] == false) {
                     path[pathY][pathX] = true;
                     pathY -= 1;
-                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
+                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                 }
             }
         }
@@ -327,7 +324,7 @@ public class Maze {
                 if(visited[pathY][pathX+1] == true && confirmed[pathY][pathX+1] == false) {
                     confirmed[pathY][pathX] = true;
                     pathX += 1;
-                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
+                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                 }
             }
         }
@@ -336,7 +333,7 @@ public class Maze {
                 if(visited[pathY+1][pathX] == true && confirmed[pathY+1][pathX] == false) {
                     confirmed[pathY][pathX] = true;
                     pathY += 1;
-                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
+                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                 }
             }
         }
@@ -345,7 +342,7 @@ public class Maze {
                 if(visited[pathY][pathX-1] == true && confirmed[pathY][pathX-1] == false) {
                     confirmed[pathY][pathX] = true;
                     pathX -= 1;
-                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
+                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                 }
             }
         }
@@ -354,13 +351,13 @@ public class Maze {
                 if(visited[pathY-1][pathX] == true && confirmed[pathY-1][pathX] == false) {
                     confirmed[pathY][pathX] = true;
                     pathY -= 1;
-                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
+                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                 }
             }
         }
     }
 
-    public static void display(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY) {
+    public static void display(int rows,int columns, char mazeY[][], char mazeX[][], int run, boolean path[][], int pathX, int pathY) {
         for(int i = 0; i < rows; i++) {
 
             // creating north walls
