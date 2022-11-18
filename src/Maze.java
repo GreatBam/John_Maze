@@ -194,7 +194,7 @@ public class Maze {
         
         while(true) {
             System.out.println("Enter loop");
-            System.out.println(pathSearch);
+            // System.out.println(pathSearch);
             visited[pathY][pathX] = true;
             path[pathY][pathX] = true;
             
@@ -301,22 +301,18 @@ public class Maze {
 
             if(pathSearch >= 4) {
                 backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                break;
             }
         }
     }
 
     public static void backtrack(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY, int run, boolean visited[][], boolean confirmed[][]) {
         System.out.println("Start backtrack");
-        confirmed[pathY][pathX] = true;
-        // path[pathY][pathX] = false;
+        path[pathY][pathX] = false;
         if(((pathX+1) >= 0) && ((pathX+1) < columns)) {
             if(mazeX[pathY][pathX+1] == 1) {
-                if(visited[pathY][pathX+1] == true && confirmed[pathY][pathX+1] == false) {
-                    path[pathY][pathX] = false;
-                    pathX += 1;
-                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
-                }
-                if(visited[pathY][pathX+1] == false) {
+                if(visited[pathY][pathX+1] == false && confirmed[pathY][pathX+1] == false) {
+                    path[pathY][pathX] = true;
                     pathX += 1;
                     solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                 }
@@ -324,12 +320,8 @@ public class Maze {
         }
         if(((pathY+1) >= 0) && ((pathY+1) < rows)) {
             if(mazeY[pathY+1][pathX] == 1) {
-                if(visited[pathY+1][pathX] == true && confirmed[pathY+1][pathX] == false) {
-                    path[pathY][pathX] = false;
-                    pathY += 1;
-                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
-                }
-                if(visited[pathY+1][pathX] == false) {
+                if(visited[pathY+1][pathX] == false && confirmed[pathY+1][pathX] == false) {
+                    path[pathY][pathX] = true;
                     pathY += 1;
                     solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                 }
@@ -337,12 +329,8 @@ public class Maze {
         }
         if(((pathX-1) >= 0) && ((pathX-1) < columns)) {
             if(mazeX[pathY][pathX] == 1) {
-                if(visited[pathY][pathX-1] == true && confirmed[pathY][pathX-1] == false) {
-                    path[pathY][pathX] = false;
-                    pathX -= 1;
-                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
-                }
-                if(visited[pathY][pathX-1] == false) {
+                if(visited[pathY][pathX-1] == false && confirmed[pathY][pathX-1] == false) {
+                    path[pathY][pathX] = true;
                     pathX -= 1;
                     solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                 }
@@ -350,14 +338,50 @@ public class Maze {
         }
         if(((pathY-1) >= 0) && ((pathY-1) < rows)) {
             if(mazeY[pathY][pathX] == 1) {
-                if(visited[pathY-1][pathX] == true && confirmed[pathY-1][pathX] == false) {
-                    path[pathY][pathX] = false;
-                    pathY -= 1;
-                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
-                }
-                if(visited[pathY-1][pathX] == false) {
+                if(visited[pathY-1][pathX] == false && confirmed[pathY-1][pathX] == false) {
+                    path[pathY][pathX] = true;
                     pathY -= 1;
                     solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                }
+            }
+        }
+        if(((pathX+1) >= 0) && ((pathX+1) < columns)) {
+            if(mazeX[pathY][pathX+1] == 1) {
+                if(visited[pathY][pathX+1] == true && confirmed[pathY][pathX+1] == false) {
+                    confirmed[pathY][pathX] = true;
+                    pathX += 1;
+                    System.out.println("recurse backtrack right");
+                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                }
+            }
+        }
+        if(((pathY+1) >= 0) && ((pathY+1) < rows)) {
+            if(mazeY[pathY+1][pathX] == 1) {
+                if(visited[pathY+1][pathX] == true && confirmed[pathY+1][pathX] == false) {
+                    confirmed[pathY][pathX] = true;
+                    pathY += 1;
+                    System.out.println("recurse backtrack down");
+                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                }
+            }
+        }
+        if(((pathX-1) >= 0) && ((pathX-1) < columns)) {
+            if(mazeX[pathY][pathX] == 1) {
+                if(visited[pathY][pathX-1] == true && confirmed[pathY][pathX-1] == false) {
+                    confirmed[pathY][pathX] = true;
+                    pathX -= 1;
+                    System.out.println("recurse backtrack left");
+                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                }
+            }
+        }
+        if(((pathY-1) >= 0) && ((pathY-1) < rows)) {
+            if(mazeY[pathY][pathX] == 1) {
+                if(visited[pathY-1][pathX] == true && confirmed[pathY-1][pathX] == false) {
+                    confirmed[pathY][pathX] = true;
+                    pathY -= 1;
+                    System.out.println("recurse backtrack up");
+                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
                 }
             }
         }
