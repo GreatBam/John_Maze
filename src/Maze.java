@@ -3,7 +3,7 @@ import java.util.InputMismatchException;
 
 public class Maze {
     public static void main(String[] args) {
-        int rows = 0, columns = 0; char mazeY[][];char mazeX[][]; boolean check[][]; Scanner sc = new Scanner(System.in); int run = 0; boolean path[][];
+        int rows = 0, columns = 0; char mazeY[][];char mazeX[][]; boolean check[][]; Scanner sc = new Scanner(System.in); boolean path[][];
         int pathY = 0; int pathX = 0; boolean visited[][]; boolean confirmed[][];
 
         // ask for number of rows/columns
@@ -68,17 +68,16 @@ public class Maze {
         path[0][0] = true;
 
         // generate maze
-        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
-        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
-        display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
+        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
+        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
+        display(rows, columns, mazeY, mazeX, path, pathX, pathY);
     }
 
-    public static void generate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run, boolean path[][]) {
+    public static void generate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, boolean path[][]) {
         int cylce = 0;
         String[] directions = { "North", "South", "East", "West"};
         String dir = directions[(int) (Math.floor(Math.random() * directions.length))];
         mazeY[0][0] = 1;
-        run += 1;
             
         // maze generation
         check[frontierY][frontierX] = true;
@@ -89,7 +88,7 @@ public class Maze {
                     if(check[frontierY-1][frontierX] == false) {
                         mazeY[frontierY][frontierX] = 1;
                         frontierY -= 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
                         break;
                     } else {
                         dir = "South";
@@ -104,7 +103,7 @@ public class Maze {
                     if(check[frontierY+1][frontierX] == false) {
                         mazeY[frontierY+1][frontierX] = 1;
                         frontierY += 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
                         break;
                     } else {
                         dir = "West";
@@ -119,7 +118,7 @@ public class Maze {
                     if(check[frontierY][frontierX-1] == false) {
                         mazeX[frontierY][frontierX] = 1;
                         frontierX -= 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
                         break;
                     } else {
                         dir = "East";
@@ -134,7 +133,7 @@ public class Maze {
                     if(check[frontierY][frontierX+1] == false) {
                         mazeX[frontierY][frontierX+1] = 1;
                         frontierX += 1;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
                         break;
                     } else {
                         dir = "North";
@@ -144,20 +143,21 @@ public class Maze {
                 }
             }
             if(cylce > 4) {
-                terminate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
+                terminate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
                 break;
             }
         }
     }
 
-    public static void terminate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, int run, boolean path[][]) {
+    public static void terminate(int rows, int columns, char mazeY[][], char mazeX[][], boolean check[][], int frontierY, int frontierX, boolean path[][]) {
+        // finalize generation
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
                 if(((i-1) >= 0) && ((i-1) < rows)) {
                     if(check[i][j] == true && check[i-1][j] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
                         break;
                     }
                 }
@@ -165,7 +165,7 @@ public class Maze {
                     if(check[i][j] == true && check[i+1][j] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
                         break;
                     }
                 }
@@ -173,7 +173,7 @@ public class Maze {
                     if(check[i][j] == true && check[i][j-1] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
                         break;
                     }
                 }
@@ -181,7 +181,7 @@ public class Maze {
                     if(check[i][j] == true && check[i][j+1] == false) {
                         frontierY = i;
                         frontierX = j;
-                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, run, path);
+                        generate(rows, columns, mazeY, mazeX, check, frontierY, frontierX, path);
                         break;
                     }
                 }
@@ -189,132 +189,107 @@ public class Maze {
         }
     }
 
-    public static void solver(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY, int run, boolean visited[][], boolean confirmed[][]) {
+    public static void solver(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY, boolean visited[][], boolean confirmed[][]) {
         int pathSearch = 0;
         
+        // maze solver
         while(true) {
-            System.out.println("Enter loop");
-            // System.out.println(pathSearch);
             visited[pathY][pathX] = true;
             path[pathY][pathX] = true;
             
+            // if the exit is reached, display
             if(pathX == (columns-1) && (pathY == (rows-1))) {
                 path[pathY][pathX] = true;
-                System.out.println("done");
-                System.out.println();
-                display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
-                System.exit(0);
+                // System.exit(0);
                 break;
             }
+
+            // search path
             if(((pathX+1) >= 0) && ((pathX+1) < columns)) {
                 if(mazeX[pathY][pathX+1] == 1) {
                     if(visited[pathY][pathX+1] == false) {
-                        System.out.println("right");
-                        System.out.println();
                         pathX += 1;
                         visited[pathY][pathX] = true;
                         path[pathY][pathX] = true;
-                        display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
-                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
                         break;
                     } else {
-                        System.out.println("Pass right");
                         pathSearch += 1;
                     }
                 } else {
-                    System.out.println("Pass right");
                     pathSearch += 1;
                 }
             } else {
-                System.out.println("Pass right");
                 pathSearch += 1;
             }
             if(((pathY+1) >= 0) && ((pathY+1) < rows)) {
                 if(mazeY[pathY+1][pathX] == 1) {
                     if(visited[pathY+1][pathX] == false) {
-                        System.out.println("down");
-                        System.out.println();
                         pathY += 1;
                         visited[pathY][pathX] = true;
                         path[pathY][pathX] = true;
-                        display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
-                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
                         break;
                     } else {
-                        System.out.println("Pass down");
                         pathSearch += 1;
                     }
                 } else {
-                    System.out.println("Pass down");
                     pathSearch += 1;
                 }
             } else {
-                System.out.println("Pass down");
                 pathSearch += 1;
             }
             if(((pathX-1) >= 0) && ((pathX-1) < columns)) {
                 if(mazeX[pathY][pathX] == 1) {
                     if(visited[pathY][pathX-1] == false) {
-                        System.out.println("left");
-                        System.out.println();
                         pathX -= 1;
                         visited[pathY][pathX] = true;
                         path[pathY][pathX] = true;
-                        display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
-                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
                         break;
                     } else {
-                        System.out.println("Pass left");
                         pathSearch += 1;
                     }
                 } else {
-                    System.out.println("Pass left");
                     pathSearch += 1;
                 }
             } else {
-                System.out.println("Pass left");
                 pathSearch += 1;
             }
             if(((pathY-1) >= 0) && ((pathY-1) < rows)) {
                 if(mazeY[pathY][pathX] == 1) {
                     if(visited[pathY-1][pathX] == false) {
-                        System.out.println("up");
-                        System.out.println();
                         pathY -= 1;
                         visited[pathY][pathX] = true;
                         path[pathY][pathX] = true;
-                        display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
-                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                        solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
                         break;
                     } else {
-                        System.out.println("Pass up");
                         pathSearch += 1;
                     }
                 } else {
-                    System.out.println("Pass up");
                     pathSearch += 1;
                 }
             } else {
-                System.out.println("Pass up");
                 pathSearch += 1;
             }
-
             if(pathSearch >= 4) {
-                backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
                 break;
             }
         }
     }
 
-    public static void backtrack(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY, int run, boolean visited[][], boolean confirmed[][]) {
-        System.out.println("Start backtrack");
+    public static void backtrack(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY, boolean visited[][], boolean confirmed[][]) {
         path[pathY][pathX] = false;
+
+        // if there is a path
         if(((pathX+1) >= 0) && ((pathX+1) < columns)) {
             if(mazeX[pathY][pathX+1] == 1) {
                 if(visited[pathY][pathX+1] == false && confirmed[pathY][pathX+1] == false) {
                     path[pathY][pathX] = true;
                     pathX += 1;
-                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
                 }
             }
         }
@@ -323,7 +298,7 @@ public class Maze {
                 if(visited[pathY+1][pathX] == false && confirmed[pathY+1][pathX] == false) {
                     path[pathY][pathX] = true;
                     pathY += 1;
-                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
                 }
             }
         }
@@ -332,7 +307,7 @@ public class Maze {
                 if(visited[pathY][pathX-1] == false && confirmed[pathY][pathX-1] == false) {
                     path[pathY][pathX] = true;
                     pathX -= 1;
-                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
                 }
             }
         }
@@ -341,17 +316,18 @@ public class Maze {
                 if(visited[pathY-1][pathX] == false && confirmed[pathY-1][pathX] == false) {
                     path[pathY][pathX] = true;
                     pathY -= 1;
-                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                    solver(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
                 }
             }
         }
+
+        //if there is no way, backtrack
         if(((pathX+1) >= 0) && ((pathX+1) < columns)) {
             if(mazeX[pathY][pathX+1] == 1) {
                 if(visited[pathY][pathX+1] == true && confirmed[pathY][pathX+1] == false) {
                     confirmed[pathY][pathX] = true;
                     pathX += 1;
-                    System.out.println("recurse backtrack right");
-                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
                 }
             }
         }
@@ -360,8 +336,7 @@ public class Maze {
                 if(visited[pathY+1][pathX] == true && confirmed[pathY+1][pathX] == false) {
                     confirmed[pathY][pathX] = true;
                     pathY += 1;
-                    System.out.println("recurse backtrack down");
-                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
                 }
             }
         }
@@ -370,8 +345,7 @@ public class Maze {
                 if(visited[pathY][pathX-1] == true && confirmed[pathY][pathX-1] == false) {
                     confirmed[pathY][pathX] = true;
                     pathX -= 1;
-                    System.out.println("recurse backtrack left");
-                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
                 }
             }
         }
@@ -380,68 +354,13 @@ public class Maze {
                 if(visited[pathY-1][pathX] == true && confirmed[pathY-1][pathX] == false) {
                     confirmed[pathY][pathX] = true;
                     pathY -= 1;
-                    System.out.println("recurse backtrack up");
-                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited, confirmed);
+                    backtrack(rows, columns, mazeY, mazeX, path, pathX, pathY, visited, confirmed);
                 }
             }
         }
     }
 
-    // public static void solverRedirect(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY, int run, boolean visited[][]) {
-    //     System.out.println("Enter redirect");
-    //     System.out.println("PathX : " + pathX);
-    //     System.out.println("PathY : " + pathY);
-    //     System.out.println("");
-    //     for(int i = 0; i < rows; i++) {
-    //         for(int j = 0; j < columns; j++) {
-    //             if(((j+1) >= 0) && ((j+1) < rows)) {
-    //                 if(visited[i][j+1] == false && mazeX[i][j+1] == 1) {
-    //                     System.out.println("Redirect right");
-    //                     display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
-    //                     pathY = i;
-    //                     pathX = j;
-    //                     solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
-    //                     break;
-    //                 }
-    //             }
-    //             if(((i+1) >= 0) && ((i+1) < rows)) {
-    //                 if(visited[i+1][j] == false && mazeY[i+1][j] == 1) {
-    //                     System.out.println("Redirect down");
-    //                     display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
-    //                     pathY = i;
-    //                     pathX = j;
-    //                     solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
-    //                     break;
-    //                 }
-    //             }
-    //             if(((j-1) >= 0) && ((j-1) < rows)) {
-    //                 if(visited[i][j-1] == false && mazeX[i][j] == 1) {
-    //                     System.out.println("Redirect left");
-    //                     display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
-    //                     pathY = i;
-    //                     pathX = j;
-    //                     solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
-    //                     break;
-    //                 }
-    //             }
-    //             if(((i-1) >= 0) && ((i-1) < rows)) {
-    //                 if(visited[i-1][j] == false && mazeY[i][j] == 1) {
-    //                     System.out.println("Redirect up");
-    //                     display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
-    //                     pathY = i;
-    //                     pathX = j;
-    //                     solver(rows, columns, mazeY, mazeX, path, pathX, pathY, run, visited);
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     System.out.println("Exit solving loop");
-    //     display(rows, columns, mazeY, mazeX, run, path, pathX, pathY);
-    //     System.exit(0);
-    // }
-
-    public static void display(int rows,int columns, char mazeY[][], char mazeX[][], int run, boolean path[][], int pathX, int pathY) {
+    public static void display(int rows,int columns, char mazeY[][], char mazeX[][], boolean path[][], int pathX, int pathY) {
         for(int i = 0; i < rows; i++) {
 
             // creating north walls
@@ -474,11 +393,5 @@ public class Maze {
 			System.out.print("+---");
 		}
         System.out.println("+   +");
-
-        // iteration counter
-        System.out.println("");
-        System.out.println("Path X : " + pathX);
-        System.out.println("Path Y : " + pathY);
-        System.out.println("");
     }
 }
